@@ -374,7 +374,7 @@ const CarCostCalculator = () => {
     };
 
     const addCar = () => {
-        const newId = Math.max(...cars.map((c) => c.id)) + 1;
+        const newId = Math.max(...cars.map((c: Any) => c.id)) + 1;
         setCars([
             ...cars,
             {
@@ -397,9 +397,9 @@ const CarCostCalculator = () => {
         ]);
     };
 
-    const removeCar = (id) => {
+    const removeCar = (id: number) => {
         if (cars.length > 1) {
-            setCars(cars.filter((car) => car.id !== id));
+            setCars(cars.filter((car: any) => car.id !== id));
         }
     };
 
@@ -449,6 +449,174 @@ const CarCostCalculator = () => {
         a.click();
     };
 
+    // Structured CSV export: header + one row per car (good for round-trip import)
+    const exportStructuredCSV = () => {
+        const headers = [
+            "name",
+            "type",
+            "drivetrain",
+            "purchasePrice",
+            "leaseMonthly",
+            "insuranceYear1",
+            "insuranceDecrease",
+            "taxYear",
+            "maintenancePerYear",
+            "kmPerCharge",
+            "kWhPerCharge",
+            "kmPerLitre",
+            "costPerKm",
+            "kmLimit",
+            "excessKmCost",
+            "depreciationRate",
+            "autoComputeEnergyCost",
+        ];
+
+        const escape = (v: any) => {
+            if (v === null || v === undefined) return "";
+            const s = String(v);
+            if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+                return '"' + s.replace(/"/g, '""') + '"';
+            }
+            return s;
+        };
+
+        let csv = headers.join(",") + "\n";
+        cars.forEach((car: any) => {
+            const row = [
+                car.name,
+                car.type,
+                car.drivetrain,
+                car.purchasePrice,
+                car.leaseMonthly,
+                car.insuranceYear1,
+                car.insuranceDecrease,
+                car.taxYear,
+                car.maintenancePerYear,
+                car.kmPerCharge,
+                car.kWhPerCharge,
+                car.kmPerLitre,
+                car.costPerKm,
+                car.kmLimit,
+                car.excessKmCost,
+                car.depreciationRate,
+                car.autoComputeEnergyCost === false ? "false" : "true",
+            ];
+            csv += row.map(escape).join(",") + "\n";
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "cars-structured-export.csv";
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+
+    // Lightweight CSV parser -> array of car objects
+    const parseCsvToCars = (text: string) => {
+        // helper: split CSV line into fields respecting simple quoted values
+        const splitLine = (line: string) => {
+            const res: string[] = [];
+            let cur = "";
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        cur += '"';
+                        i++; // skip escaped quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === "," && !inQuotes) {
+                    res.push(cur);
+                    cur = "";
+                } else {
+                    cur += ch;
+                }
+            }
+            res.push(cur);
+            return res.map((s) => s.trim());
+        };
+
+        const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+        if (lines.length === 0) return [];
+
+        const header = splitLine(lines[0]);
+        const keys = header.map((h) => h.replace(/"/g, "").trim());
+
+        const rows = lines.slice(1);
+        const parsed: any[] = [];
+        rows.forEach((r, idx) => {
+            const cols = splitLine(r);
+            if (cols.length === 0) return;
+            const obj: any = {};
+            keys.forEach((k, i) => {
+                const raw = cols[i] !== undefined ? cols[i] : "";
+                const key = k;
+                // Basic mapping: try to keep English keys; also accept Hebrew labels
+                const normalizedKey = key
+                    .toLowerCase()
+                    .replace(/\s+/g, "")
+                    .replace(/["]+/g, "");
+
+                // parse common numeric fields
+                const numFields = [
+                    "purchaseprice",
+                    "leasemonthly",
+                    "insuranceyear1",
+                    "insurancedecrease",
+                    "taxyear",
+                    "maintenanceperyear",
+                    "kmpercharge",
+                    "kwhpercharge",
+                    "kmperlitre",
+                    "costperkm",
+                    "kmlimit",
+                    "excesskmcost",
+                    "depreciationrate",
+                ];
+
+                if (numFields.includes(normalizedKey)) {
+                    obj[normalizedKey] = raw === "" ? 0 : Number(raw);
+                } else if (normalizedKey === "autocomputeenergycost") {
+                    obj[normalizedKey] = raw === "false" || raw === "0" ? false : true;
+                } else if (normalizedKey === "type" || normalizedKey === "drivetrain" || normalizedKey === "name") {
+                    obj[normalizedKey] = raw;
+                } else {
+                    obj[normalizedKey] = raw;
+                }
+            });
+
+            // Build a car object with defaults and pick values from parsed keys (support both normalized or original keys)
+            const car: any = {
+                id: Date.now() + idx,
+                name: obj.name || obj["שם"] || `רכב ${idx + 1}`,
+                type: obj.type || obj["סוג"] || "new",
+                drivetrain: obj.drivetrain || obj["סוגהנעה"] || "gasoline",
+                purchasePrice: Number(obj.purchaseprice || obj.purchasePrice || 0),
+                leaseMonthly: Number(obj.leasemonthly || obj.leaseMonthly || 0),
+                insuranceYear1: Number(obj.insuranceyear1 || obj.insuranceYear1 || 0),
+                insuranceDecrease: Number(obj.insurancedecrease || obj.insuranceDecrease || 0),
+                taxYear: Number(obj.taxyear || obj.taxYear || 0),
+                maintenancePerYear: Number(obj.maintenanceperyear || obj.maintenancePerYear || 0),
+                kmPerCharge: Number(obj.kmpercharge || obj.kmPerCharge || 0),
+                kWhPerCharge: Number(obj.kwhpercharge || obj.kWhPerCharge || 0),
+                kmPerLitre: Number(obj.kmperlitre || obj.kmPerLitre || 0),
+                costPerKm: Number(obj.costperkm || obj.costPerKm || 0),
+                kmLimit: Number(obj.kmlimit || obj.kmLimit || 0),
+                excessKmCost: Number(obj.excesskmcost || obj.excessKmCost || 0),
+                depreciationRate: Number(obj.depreciationrate || obj.depreciationRate || 0),
+                autoComputeEnergyCost: obj.autocomputeenergycost === false ? false : true,
+            };
+
+            parsed.push(car);
+        });
+
+        return parsed;
+    };
+
     return (
         <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
             <div className="max-w-7xl mx-auto">
@@ -462,20 +630,70 @@ const CarCostCalculator = () => {
                                 השווה את עלות ההחזקה הכוללת: חדש מול יד שניה מול ליסינג
                             </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3 top-actions">
                             <button
                                 onClick={restoreDefaults}
-                                className="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                                className={"btn action-btn btn-gray"}
                                 title="שחזר לברירות המחדל"
                             >
                                 שחזר ברירות מחדל
                             </button>
+                            <input
+                                type="file"
+                                accept=".csv,text/csv"
+                                className="hidden"
+                                id="csvImportInput"
+                                onChange={(e) => {
+                                    const f = e.target.files && e.target.files[0];
+                                    if (!f) return;
+                                    const reader = new FileReader();
+                                    reader.onload = (ev) => {
+                                        try {
+                                            const text = String(ev.target?.result || "");
+                                            const parsed = parseCsvToCars(text);
+                                            if (parsed && parsed.length) {
+                                                if (
+                                                    confirm(
+                                                        `ייבא ${parsed.length} רכבים מה-CSV והחלף את הקבוצה הנוכחית?`
+                                                    )
+                                                ) {
+                                                    setCars(parsed);
+                                                }
+                                            } else {
+                                                alert("לא נמצאו שורות תקינות לקליטה בקובץ ה-CSV.");
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            alert("שגיאה בקריאת קובץ ה-CSV. ודא שהפורמט תקין.");
+                                        }
+                                    };
+                                    reader.readAsText(f, "utf-8");
+                                    // clear value so same file can be re-selected
+                                    (e.target as HTMLInputElement).value = "";
+                                }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => (document.getElementById('csvImportInput') as HTMLInputElement | null)?.click()}
+                                className={"btn action-btn btn-blue"}
+                            >
+                                ייבא CSV
+                            </button>
+                            <button
+                                onClick={exportStructuredCSV}
+                                className={"btn action-btn btn-indigo"}
+                                title="ייצא CSV מובנה (ניתן לייבוא חוזר)"
+                            >
+                                <span className="action-text">ייצא CSV מובנה</span>
+                                <span className="action-icon"><Download size={16} /></span>
+                            </button>
                             <button
                                 onClick={exportToCSV}
-                                className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                                className={"btn action-btn btn-green"}
+                                title="ייצא דוח קריא"
                             >
-                                <Download size={20} />
-                                ייצא CSV
+                                <span className="action-text">ייצא דוח CSV</span>
+                                <span className="action-icon"><Download size={16} /></span>
                             </button>
                         </div>
                     </div>
@@ -493,7 +711,7 @@ const CarCostCalculator = () => {
                             min="1"
                             max="10"
                         />
-                        <div className="mt-4 grid grid-cols-2 gap-4">
+                        <div className="mt-4 grid grid-cols-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     מחיר דלק (₪ / ליטר)
@@ -547,7 +765,14 @@ const CarCostCalculator = () => {
                         סיכום השוואת עלויות
                     </h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full summary-table">
+                            {/* fixed first column; remaining car columns let the browser size them (min-width controlled by CSS) */}
+                            <colgroup>
+                                <col style={{ width: "240px" }} />
+                                {cars.map((c: any) => (
+                                    <col key={c.id} />
+                                ))}
+                            </colgroup>
                             <thead>
                                 <tr className="border-b-2 border-gray-300">
                                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
@@ -558,12 +783,10 @@ const CarCostCalculator = () => {
                                             key={car.id}
                                             className="text-right py-3 px-4 font-semibold text-gray-700"
                                         >
-                                            {car.name}
+                                            <div className="car-name">{car.name}</div>
                                         </th>
                                     ))}
                                 </tr>
-                            </thead>
-                            <tbody>
                                 <tr className="border-b border-gray-200">
                                     <td className="py-3 px-4 font-medium text-gray-700">סוג</td>
                                     {cars.map((car: any) => (
@@ -585,6 +808,87 @@ const CarCostCalculator = () => {
                                         </td>
                                     ))}
                                 </tr>
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">סוג הנעה</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            {car.drivetrain === "electric"
+                                                ? "חשמלי"
+                                                : car.drivetrain === "phev"
+                                                    ? "היברידי נטען"
+                                                    : "בנזין"}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">מחיר רכישה (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            ₪{(Number(car.purchasePrice) || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">תשלום ליסינג חודשי (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            {car.type === "lease" ? `₪${(Number(car.leaseMonthly) || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}` : "-"}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">
+                                        עלות אנרגיה ל-ק"מ (₪)
+                                        <Tooltip id="costPerKm-summary-extra" text={tooltips.energyCostPerKm} />
+                                    </td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            ₪{computeEnergyCostPerKm(car).toFixed(3)}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">ק"מ לשנה</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            {(globalKmPerYear || 0).toLocaleString()}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">שיעור פחת (% לשנה)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            {(Number(car.depreciationRate) || 0).toFixed(1)}%
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">אחזקה לשנה (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            ₪{(Number(car.maintenancePerYear) || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-gray-700">ביטוח שנה 1 (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="text-right py-3 px-4 text-gray-700">
+                                            ₪{(Number(car.insuranceYear1) || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
                                 <tr className="border-b border-gray-200 bg-yellow-50">
                                     <td className="py-3 px-4 font-bold text-gray-800">
                                         עלות נטו (העלות האמיתית)
@@ -688,18 +992,18 @@ const CarCostCalculator = () => {
                                     {cars.map((car: any) => (
                                         <th key={car.id} className="py-2 px-3 text-right align-top">
                                             <div className="flex items-center justify-end gap-2">
-                                                <input
-                                                    type="text"
-                                                    value={car.name}
-                                                    onChange={(e) =>
-                                                        setCars(
-                                                            cars.map((c: any) =>
-                                                                c.id === car.id ? { ...c, name: e.target.value } : c
-                                                            )
-                                                        )
-                                                    }
-                                                    className="font-semibold text-right px-2 py-1 border-b-2 border-transparent focus:border-blue-300"
-                                                />
+                                                        <textarea
+                                                            rows={2}
+                                                            value={car.name}
+                                                            onChange={(e) =>
+                                                                setCars(
+                                                                    cars.map((c: any) =>
+                                                                        c.id === car.id ? { ...c, name: e.target.value } : c
+                                                                    )
+                                                                )
+                                                            }
+                                                            className="table-header-textarea"
+                                                        />
                                                 {cars.length > 1 && (
                                                     <button
                                                         onClick={() => removeCar(car.id)}

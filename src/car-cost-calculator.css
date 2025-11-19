@@ -64,6 +64,42 @@ body{
 .hover\:bg-blue-700:hover{background:#1d4ed8}
 .transition-colors{transition:background-color .18s ease}
 
+/* Action button - unified look for top controls */
+.action-btn{padding:0.5rem 0.9rem;font-size:0.95rem;border-radius:10px;box-shadow:0 4px 10px rgba(2,6,23,0.06);display:inline-flex;align-items:center;gap:0.5rem}
+.action-btn:focus{outline:none;box-shadow:0 0 0 3px rgba(59,130,246,0.12)}
+.btn-gray{background:#f3f4f6;color:#111827}
+.btn-gray:hover{background:#e5e7eb}
+.btn-blue{background:var(--primary);color:white}
+.btn-blue:hover{background:#1d4ed8}
+.btn-indigo{background:#4f46e5;color:white}
+.btn-indigo:hover{background:#4338ca}
+.btn-green{background:var(--accent);color:white}
+.btn-green:hover{background:#059669}
+.action-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center}
+
+/* Top header actions responsive behavior */
+.top-actions{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.top-actions .action-btn{flex:0 1 auto}
+.top-actions .btn{white-space:nowrap}
+.action-text{display:inline}
+
+@media (max-width: 640px){
+  /* Stack the buttons vertically on small screens for better tap targets */
+  .top-actions{flex-direction:column;align-items:stretch}
+  .top-actions .action-btn{width:100%;justify-content:center}
+  /* hide longer text on very small screens to save space; keep icons visible */
+  .action-text{display:none}
+  /* Make sure icon-only buttons still look good */
+  .action-icon{margin:0 auto}
+}
+
+@media (min-width: 641px) and (max-width:1024px){
+  /* mid-size screens: allow wrapping but keep buttons inline when possible */
+  .top-actions{flex-wrap:wrap}
+  .top-actions .action-btn{min-width:120px}
+  .action-text{display:inline}
+}
+
 /* Inputs & selects */
 input[type="text"], input[type="number"], select{
   width:100%;padding:.5rem .75rem;border:1px solid #e5e7eb;border-radius:8px;background:white;color:#111827;box-sizing:border-box
@@ -73,6 +109,8 @@ input:focus, select:focus{box-shadow:0 0 0 3px rgba(59,130,246,0.12);border-colo
 /* Tables */
 .overflow-x-auto{overflow:auto}
 table{width:100%;border-collapse:collapse}
+/* Summary table fixed layout so car columns can be equal width */
+.summary-table{table-layout:fixed}
 th,td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid #e6edf2}
 th{font-weight:600;color:#374151}
 td.text-right{text-align:right}
@@ -159,10 +197,56 @@ div[dir="rtl"] table td {
   direction: rtl;
 }
 
+/* Make the summary table more resilient on smaller viewports:
+   - Keep a fixed first column width (set in the colgroup).
+   - Allow other columns to have a sensible min-width so they don't collapse/glitch.
+   - Switch to table-layout:auto on narrower screens so cells can wrap naturally. */
+@media (max-width: 1024px) {
+  .summary-table {
+    table-layout: auto; /* let cells size and wrap naturally on medium/narrow screens */
+  }
+  /* ensure non-first columns keep a reasonable minimum width */
+  .summary-table th:not(:first-child),
+  .summary-table td:not(:first-child) {
+    min-width: 140px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* For very narrow screens, allow horizontal scroll while keeping content readable */
+@media (max-width: 640px) {
+  .summary-table th:not(:first-child),
+  .summary-table td:not(:first-child) {
+    min-width: 120px;
+  }
+}
+
 /* Keep header labels slightly bolder for readability */
 div[dir="rtl"] table thead th {
   font-weight: 600;
 }
+
+/* Car name wrapping helper for table headers */
+.car-name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: block;
+}
+
+/* Textarea used for editable car names in the wide table header */
+.table-header-textarea{
+  width: 10rem;
+  min-height: 2.25rem;
+  padding: .25rem .5rem;
+  border: 0;
+  background: transparent;
+  font-weight: 600;
+  text-align: right;
+  resize: none;
+}
+.table-header-textarea:focus{outline:2px solid rgba(59,130,246,0.12);border-radius:6px}
 
 /* Misc */
 .border-t-2{border-top-width:2px;border-top-color:#e6edf2}
@@ -183,3 +267,6 @@ div[dir="rtl"] table thead th {
 
 /* Make sure large headings wrap on small screens */
 h1,h2,h3{margin:0}
+
+/* Utility to hide elements (used for hidden file input) */
+.hidden{display:none !important}
