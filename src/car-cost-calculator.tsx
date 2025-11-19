@@ -93,6 +93,15 @@ const CarCostCalculator = () => {
         return 5;
     });
     const [showTooltip, setShowTooltip] = useState(null);
+    const [isWide, setIsWide] = useState(() =>
+        typeof window !== "undefined" ? window.innerWidth >= 1024 : true
+    );
+
+    useEffect(() => {
+        const onResize = () => setIsWide(window.innerWidth >= 1024);
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
 
     const [globalCosts, setGlobalCosts] = useState(() => {
         try {
@@ -150,7 +159,7 @@ const CarCostCalculator = () => {
         insuranceDecrease:
             "אחוז בו עלות הביטוח יורדת בכל שנה ככל שהרכב מתבגר. בדרך כלל 3–7% בשנה.",
         taxYear:
-            "מס בעלות שנתי (מס רכב). נכון כיום ל-2025 לעתים 0 ש\"ח לרכבים חשמליים, אך יש לתקצב שינוי עתידי.",
+            "עלויות רישוי ומס שנתיות (מס רכב). נכון כיום ל-2025 לעתים 0 ש\"ח לרכבים חשמליים, אך יש לתקצב שינוי עתידי.",
         maintenancePerYear:
             "עלויות אחזקה שנתיות ממוצעות כולל טיפולים, צמיגים, בלמים וכו'. רכבים חשמליים: 1,500–2,500 ש\"ח; היברידיים: 2,500–4,000; בנזין: 3,000–5,000 ש\"ח.",
         kmPerYear:
@@ -372,6 +381,7 @@ const CarCostCalculator = () => {
                 id: newId,
                 name: `New Car ${newId}`,
                 type: "new",
+                drivetrain: "electric",
                 autoComputeEnergyCost: true,
                 purchasePrice: 200000,
                 insuranceYear1: 7000,
@@ -667,7 +677,335 @@ const CarCostCalculator = () => {
                     </div>
                 </div>
 
-                {cars.map((car: any) => {
+                {/* wide-screen editable table: each car is a column */}
+                {isWide && (
+                    <div className="bg-white rounded-xl shadow-lg p-6 mb-6 overflow-x-auto">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">טבלת קלט (מסך רחב)</h3>
+                        <table className="w-full table-auto">
+                            <thead>
+                                <tr>
+                                    <th className="py-2 px-3 text-left">שדה</th>
+                                    {cars.map((car: any) => (
+                                        <th key={car.id} className="py-2 px-3 text-right align-top">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={car.name}
+                                                    onChange={(e) =>
+                                                        setCars(
+                                                            cars.map((c: any) =>
+                                                                c.id === car.id ? { ...c, name: e.target.value } : c
+                                                            )
+                                                        )
+                                                    }
+                                                    className="font-semibold text-right px-2 py-1 border-b-2 border-transparent focus:border-blue-300"
+                                                />
+                                                {cars.length > 1 && (
+                                                    <button
+                                                        onClick={() => removeCar(car.id)}
+                                                        title="הסר"
+                                                        className="text-sm px-2 py-1 bg-red-500 text-white rounded"
+                                                    >
+                                                        הסר
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="border-t">
+                                    <td className="py-2 px-3">סוג</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <select
+                                                value={car.type}
+                                                onChange={(e) =>
+                                                    setCars(
+                                                        cars.map((c: any) =>
+                                                            c.id === car.id ? { ...c, type: e.target.value } : c
+                                                        )
+                                                    )
+                                                }
+                                                className="px-2 py-1 border rounded"
+                                            >
+                                                <option value="new">חדש</option>
+                                                <option value="used">יד שניה</option>
+                                                <option value="lease">ליסינג</option>
+                                            </select>
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">מחיר רכישה (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <input
+                                                type="number"
+                                                value={car.purchasePrice}
+                                                onChange={(e) => updateCar(car.id, "purchasePrice", e.target.value)}
+                                                className="w-40 px-2 py-1 border rounded text-right"
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">תשלום ליסינג חודשי (₪)</td>
+                                    {cars.map((car: any) => {
+                                        const disabled = car.type !== "lease";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    value={car.leaseMonthly}
+                                                    onChange={(e) => updateCar(car.id, "leaseMonthly", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={disabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">שיעור פחת (% לשנה)</td>
+                                    {cars.map((car: any) => {
+                                        const disabled = car.type === "lease";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    step="0.5"
+                                                    value={car.depreciationRate}
+                                                    onChange={(e) => updateCar(car.id, "depreciationRate", e.target.value)}
+                                                    className="w-24 px-2 py-1 border rounded text-right"
+                                                    disabled={disabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">ביטוח שנה 1 (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <input
+                                                type="number"
+                                                value={car.insuranceYear1}
+                                                onChange={(e) => updateCar(car.id, "insuranceYear1", e.target.value)}
+                                                className="w-40 px-2 py-1 border rounded text-right"
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">ירידת ביטוח (% לשנה)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <input
+                                                type="number"
+                                                step="0.5"
+                                                value={car.insuranceDecrease}
+                                                onChange={(e) => updateCar(car.id, "insuranceDecrease", e.target.value)}
+                                                className="w-24 px-2 py-1 border rounded text-right"
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">רישוי/מס שנתי (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <input
+                                                type="number"
+                                                value={car.taxYear}
+                                                onChange={(e) => updateCar(car.id, "taxYear", e.target.value)}
+                                                className="w-40 px-2 py-1 border rounded text-right"
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">אחזקה לשנה (₪)</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <input
+                                                type="number"
+                                                value={car.maintenancePerYear}
+                                                onChange={(e) => updateCar(car.id, "maintenancePerYear", e.target.value)}
+                                                className="w-40 px-2 py-1 border rounded text-right"
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">סוג הנעה</td>
+                                    {cars.map((car: any) => (
+                                        <td key={car.id} className="py-2 px-3 text-right">
+                                            <select
+                                                value={car.drivetrain}
+                                                onChange={(e) =>
+                                                    setCars(
+                                                        cars.map((c: any) =>
+                                                            c.id === car.id ? { ...c, drivetrain: e.target.value } : c
+                                                        )
+                                                    )
+                                                }
+                                                className="px-2 py-1 border rounded"
+                                            >
+                                                <option value="electric">חשמלי</option>
+                                                <option value="phev">היברידי נטען</option>
+                                                <option value="gasoline">בנזין</option>
+                                            </select>
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">ק"מ להטענה</td>
+                                    {cars.map((car: any) => {
+                                        const enabled = car.drivetrain === "electric" || car.drivetrain === "phev";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    value={car.kmPerCharge}
+                                                    onChange={(e) => updateCar(car.id, "kmPerCharge", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={!enabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">kWh להטענה</td>
+                                    {cars.map((car: any) => {
+                                        const enabled = car.drivetrain === "electric" || car.drivetrain === "phev";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    step="0.1"
+                                                    value={car.kWhPerCharge}
+                                                    onChange={(e) => updateCar(car.id, "kWhPerCharge", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={!enabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">ק"מ לליטר</td>
+                                    {cars.map((car: any) => {
+                                        const enabled = car.drivetrain === "gasoline" || car.drivetrain === "phev";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    step="0.1"
+                                                    value={car.kmPerLitre}
+                                                    onChange={(e) => updateCar(car.id, "kmPerLitre", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={!enabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">חישוב אנרגיה אוטומטי</td>
+                                    {cars.map((car: any) => {
+                                        const applicable = car.drivetrain === "electric" || car.drivetrain === "phev" || car.drivetrain === "gasoline";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <label className="inline-flex items-center gap-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={car.autoComputeEnergyCost !== false}
+                                                        onChange={(e) =>
+                                                            setCars(
+                                                                cars.map((c: any) =>
+                                                                    c.id === car.id
+                                                                        ? { ...c, autoComputeEnergyCost: e.target.checked }
+                                                                        : c
+                                                                )
+                                                            )
+                                                        }
+                                                        // disabled={!applicable}
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        value={
+                                                            car.autoComputeEnergyCost !== false
+                                                                ? computeEnergyCostPerKm(car).toFixed(3)
+                                                                : car.costPerKm || 0
+                                                        }
+                                                            onChange={(e) => updateCar(car.id, "costPerKm", e.target.value)}
+                                                            className="w-28 px-2 py-1 border rounded text-right"
+                                                            disabled={!applicable || car.autoComputeEnergyCost !== false}
+                                                    />
+                                                </label>
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">מגבלת ק"מ לשנה</td>
+                                    {cars.map((car: any) => {
+                                        const disabled = car.type !== "lease";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    value={car.kmLimit}
+                                                    onChange={(e) => updateCar(car.id, "kmLimit", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={disabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                <tr>
+                                    <td className="py-2 px-3">עלות ק"מ עודף (₪/ק"מ)</td>
+                                    {cars.map((car: any) => {
+                                        const disabled = car.type !== "lease";
+                                        return (
+                                            <td key={car.id} className="py-2 px-3 text-right">
+                                                <input
+                                                    type="number"
+                                                    step="0.1"
+                                                    value={car.excessKmCost}
+                                                    onChange={(e) => updateCar(car.id, "excessKmCost", e.target.value)}
+                                                    className="w-40 px-2 py-1 border rounded text-right"
+                                                    disabled={disabled}
+                                                />
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {!isWide && cars.map((car: any) => {
                     const costs = calculateTotalCost(car, analysisYears);
 
                     return (
@@ -860,7 +1198,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                מס שנתי (₪)
+                                                רישוי/מס שנתי (₪)
                                                 <Tooltip
                                                     id={`taxYear-${car.id}`}
                                                     text={tooltips.taxYear}

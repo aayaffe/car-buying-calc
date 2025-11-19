@@ -128,6 +128,30 @@ td.text-right{text-align:right}
   bottom:-6px; /* arrow sits under the tooltip box pointing to the icon */
 }
 
+/* Disabled control visual styles: make disabled inputs/selects/textarea clearly dimmed */
+input[disabled],
+select[disabled],
+textarea[disabled],
+button[disabled] {
+  opacity: 0.55;
+  background-color: #f3f4f6; /* gray-100 */
+  color: #6b7280; /* gray-500 */
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* For table cells that should appear disabled (apply .disabled-cell to the td) */
+.disabled-cell {
+  opacity: 0.55;
+  background-color: #f3f4f6; /* match disabled input bg (gray-100) */
+  color: #6b7280;
+}
+
+/* Accessibility: keep focus outline for keyboard users even if dimmed */
+input[disabled]:focus, select[disabled]:focus, textarea[disabled]:focus {
+  outline: none;
+}
+
 /* Misc */
 .border-t-2{border-top-width:2px;border-top-color:#e6edf2}
 .rounded-lg{border-radius:8px}
