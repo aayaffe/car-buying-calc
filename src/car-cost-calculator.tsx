@@ -120,7 +120,7 @@ const CarCostCalculator = () => {
     const restoreDefaults = () => {
         if (
             !confirm(
-                "Restore default cars and global settings? This will overwrite your current values."
+                "לשחזר את ברירות המחדל של הרכבים וההגדרות הגלובליות? פעולה זו תחליף את הערכים הנוכחיים."
             )
         )
             return;
@@ -142,43 +142,43 @@ const CarCostCalculator = () => {
 
     const tooltips = {
         analysisYears:
-            "The number of years you plan to keep/use the car. Longer periods show the true cost advantage of ownership vs leasing.",
+            "מספר השנים שתכניסו להשתמש ברכב. תקופות ארוכות יותר מראות את היתרון האמיתי של בעלות מול ליסינג.",
         purchasePrice:
-            "Total price you pay to buy the car. For new cars, this is the showroom price. For used cars, the agreed purchase price. For leasing, this is the initial/down payment.",
+            "המחיר הכולל שתשלמו עבור הרכב. ברכבים חדשים — מחיר בחנות; ברכבים יד שניה — המחיר המוסכם; בליסינג — התשלום הראשוני/מקדמה.",
         insuranceYear1:
-            "Annual insurance cost in the first year. Includes mandatory third-party and comprehensive coverage. Typically 6,000-10,000 NIS for electric vehicles in Israel.",
+            "עלות ביטוח שנתית בשנה הראשונה. כולל חובה ומקיף. בדרך כלל 6,000–10,000 ש\"ח לרכבים חשמליים בישראל.",
         insuranceDecrease:
-            "Percentage insurance decreases each year as the car ages. Typically 3-7% annually in Israel.",
+            "אחוז בו עלות הביטוח יורדת בכל שנה ככל שהרכב מתבגר. בדרך כלל 3–7% בשנה.",
         taxYear:
-            "Annual ownership tax (mas rechev). Currently 0 NIS for electric vehicles in Israel through 2025, but budget for future changes.",
+            "מס בעלות שנתי (מס רכב). נכון כיום ל-2025 לעתים 0 ש\"ח לרכבים חשמליים, אך יש לתקצב שינוי עתידי.",
         maintenancePerYear:
-            "Average yearly maintenance costs including service, tires, brakes, etc. EVs: 1,500-2,500 NIS, Hybrids: 2,500-4,000 NIS, ICE: 3,000-5,000 NIS.",
+            "עלויות אחזקה שנתיות ממוצעות כולל טיפולים, צמיגים, בלמים וכו'. רכבים חשמליים: 1,500–2,500 ש\"ח; היברידיים: 2,500–4,000; בנזין: 3,000–5,000 ש\"ח.",
         kmPerYear:
-            "How many kilometers you drive annually. Average Israeli driver: 15,000-20,000 km/year. This heavily impacts total costs.",
+            "כמה קילומטרים אתם נוסעים בשנה. נהג ישראלי ממוצע: 15,000–20,000 ק\"מ/שנה. משפיע משמעותית על העלויות הכוללות.",
         energyCostPerKm:
-            "Cost of energy/fuel per kilometer. EVs: 0.10-0.15 NIS/km, Hybrids: 0.20-0.30 NIS/km, Gasoline: 0.40-0.60 NIS/km (based on current Israeli electricity and fuel prices).",
+            "עלות אנרגיה/דלק לכל ק\"מ. חשמל: 0.10–0.15 ש\"ח/ק\"מ; היברידים: 0.20–0.30; בנזין: 0.40–0.60 (על בסיס מחירי חשמל ודלק בישראל).",
         costPerLitre:
-            "Global fuel price (₪ per litre). Used to compute energy cost per km for gasoline cars when you provide km per litre.",
+            "מחיר דלק גלובלי (₪ לליטר). משמש לחישוב עלות ל-ק\"מ עבור רכבי בנזין עם נתון ק\"מ לליטר.",
         costPerKWh:
-            "Electricity price (₪ per kWh). Used to compute energy cost per km for electric cars when you provide km per charge and kWh per charge.",
+            "מחיר חשמל (₪ לקוט\"ש). משמש לחישוב עלות ל-ק\"מ עבור רכבים חשמליים עם נתוני ק\"מ להטענה ו-kWh להטענה.",
         depreciationRate:
-            "Percentage the car loses in value each year. New cars: 12-18% first year, then 8-12%. Used cars: 8-12%. This is your biggest cost for owned vehicles!",
+            "אחוז הערך שהרכב מאבד בכל שנה. רכבים חדשים: 12–18% בשנה הראשונה, ואז 8–12%. רכבים יד שניה: 8–12%.",
         leaseMonthly:
-            "Monthly lease payment. Includes vehicle cost but typically excludes insurance, maintenance, and fuel. Common range: 2,500-5,000 NIS/month.",
+            "תשלום חודשי בליסינג. כולל לרוב את עלות הרכב אך לא כולל ביטוח, אחזקה ודלק. טווח נפוץ: 2,500–5,000 ש\"ח/חודש.",
         kmLimit:
-            "Maximum kilometers per year included in lease. Exceeding this incurs extra charges. Standard: 15,000-20,000 km/year.",
+            "מקסימום קילומטרים בשנה הכלולים בליסינג. חריגה תגרור חיובים נוספים. סטנדרט: 15,000–20,000 ק\"מ/שנה.",
         excessKmCost:
-            "Cost per kilometer when you exceed the lease limit. Typically 0.40-0.80 NIS/km in Israel.",
+            "עלות לכל ק\"מ כאשר חורגים ממגבלת הקילומטראז'. בדרך כלל 0.40–0.80 ש\"ח/ק\"מ.",
         totalCost:
-            "Sum of all expenses: purchase/lease payments, insurance, tax, maintenance, and energy costs over the analysis period.",
+            "סכום כל ההוצאות: רכישה/תשלומי ליסינג, ביטוח, מס, אחזקה ודלק/חשמל לאורך תקופת הניתוח.",
         residualValue:
-            "Estimated value of the car at the end of the analysis period. You can sell it for this amount to recover some costs. Leased cars have 0 NIS residual value.",
+            "הערכת שווי הרכב בסוף תקופת הניתוח. ניתן למכור את הרכב בסכום זה ולהחזיר חלק מהעלויות. לרכב מושכר ערך שארית 0 ש\"ח.",
         netCost:
-            "Your actual out-of-pocket cost: Total Cost minus Residual Value. This is the TRUE cost of car ownership. The key number for comparison!",
+            "העלות הנטו שלכם: עלות כוללת פחות ערך שארית. זהו העלות האמיתית שעליכם לשלם — המספר המרכזי להשוואה.",
         costPerYear:
-            "Net cost divided by number of years. Useful for comparing to annual salary or budgeting monthly expenses (divide by 12).",
+            "העלות הנטו חלקי שנים. שימושי להשוואה להכנסה שנתית או לתקציב חודשי (לחלק ב-12).",
         costPerKm:
-            "Net cost divided by total kilometers driven. Shows efficiency: lower is better. Helps compare different usage patterns.",
+            "העלות הנטו חלקי סך הקילומטרים. מראה יעילות: נמוך יותר טוב.",
     };
     const Tooltip: React.FC<{ id: string; text: string }> = ({ id, text }) => {
         const iconRef = useRef<HTMLSpanElement | null>(null);
@@ -394,39 +394,39 @@ const CarCostCalculator = () => {
     };
 
     const exportToCSV = () => {
-        let csv = "Car Comparison Analysis\n\n";
+    let csv = "ניתוח השוואת רכבים\n\n";
 
         cars.forEach((car: any) => {
             const costs = calculateTotalCost(car, analysisYears);
             csv += `${car.name}\n`;
-            csv += `Type,${car.type}\n`;
-            csv += `Purchase Price,${car.purchasePrice}\n`;
-            csv += `Analysis Period,${analysisYears} years\n\n`;
+            csv += `סוג,${car.type}\n`;
+            csv += `מחיר רכישה,${car.purchasePrice}\n`;
+            csv += `תקופת ניתוח,${analysisYears} שנים\n\n`;
 
-            csv += "Cost Breakdown:\n";
-            csv += `Initial Payment,${costs.breakdown.purchase}\n`;
-            csv += `Lease Payments,${costs.breakdown.lease.toFixed(0)}\n`;
-            csv += `Insurance,${costs.breakdown.insurance.toFixed(0)}\n`;
-            csv += `Tax,${costs.breakdown.tax.toFixed(0)}\n`;
-            csv += `Maintenance,${costs.breakdown.maintenance.toFixed(0)}\n`;
-            csv += `Fuel/Energy,${costs.breakdown.fuel.toFixed(0)}\n`;
-            csv += `Depreciation,${costs.breakdown.depreciation.toFixed(0)}\n`;
-            csv += `Total Cost,${costs.total.toFixed(0)}\n`;
-            csv += `Residual Value,${costs.residualValue.toFixed(0)}\n`;
-            csv += `Net Cost,${costs.netCost.toFixed(0)}\n`;
-            csv += `Cost per Year,${(costs.netCost / analysisYears).toFixed(0)}\n`;
+            csv += "פירוט עלויות:\n";
+            csv += `תשלום התחלתי,${costs.breakdown.purchase}\n`;
+            csv += `תשלומי ליסינג,${costs.breakdown.lease.toFixed(0)}\n`;
+            csv += `ביטוח,${costs.breakdown.insurance.toFixed(0)}\n`;
+            csv += `מס,${costs.breakdown.tax.toFixed(0)}\n`;
+            csv += `אחזקה,${costs.breakdown.maintenance.toFixed(0)}\n`;
+            csv += `אנרגיה/דלק,${costs.breakdown.fuel.toFixed(0)}\n`;
+            csv += `פחת,${costs.breakdown.depreciation.toFixed(0)}\n`;
+            csv += `עלות כוללת,${costs.total.toFixed(0)}\n`;
+            csv += `ערך שארית,${costs.residualValue.toFixed(0)}\n`;
+            csv += `עלות נטו,${costs.netCost.toFixed(0)}\n`;
+            csv += `עלות לשנה,${(costs.netCost / analysisYears).toFixed(0)}\n`;
             const kmForCsv =
                 car.kmPerYear && Number(car.kmPerYear) > 0
                     ? Number(car.kmPerYear)
                     : globalKmPerYear;
-            csv += `Cost per KM,${(
+            csv += `עלות ל-ק"מ,${(
                 costs.netCost /
                 (kmForCsv * analysisYears)
             ).toFixed(2)}\n\n`;
 
-            csv += "Yearly Costs:\n";
+            csv += "עלויות שנתיות:\n";
             costs.yearly.forEach((cost: any, idx: number) => {
-                csv += `Year ${idx + 1},${cost.toFixed(0)}\n`;
+                csv += `שנה ${idx + 1},${cost.toFixed(0)}\n`;
             });
             csv += "\n\n";
         });
@@ -435,52 +435,50 @@ const CarCostCalculator = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "car-cost-analysis.csv";
+    a.download = "ניתוח-עלויות-רכבים.csv";
         a.click();
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+        <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
             <div className="max-w-7xl mx-auto">
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-800">
-                                Car Cost Calculator - Israel
+                                מחשבון עלות רכב - ישראל
                             </h1>
                             <p className="text-gray-600 mt-2">
-                                Compare total cost of ownership: New vs Used vs Leasing
+                                השווה את עלות ההחזקה הכוללת: חדש מול יד שניה מול ליסינג
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={restoreDefaults}
                                 className="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
-                                title="Restore default car list and global settings"
+                                title="שחזר לברירות המחדל"
                             >
-                                Restore Defaults
+                                שחזר ברירות מחדל
                             </button>
                             <button
                                 onClick={exportToCSV}
                                 className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
                             >
                                 <Download size={20} />
-                                Export CSV
+                                ייצא CSV
                             </button>
                         </div>
                     </div>
 
                     <div className="mb-6 bg-blue-50 p-4 rounded-lg">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Analysis Period (Years)
+                            תקופת ניתוח (שנים)
                             <Tooltip id="analysisYears" text={tooltips.analysisYears} />
                         </label>
                         <input
                             type="number"
                             value={analysisYears}
-                            onChange={(e) =>
-                                setAnalysisYears(Math.max(1, parseInt(e.target.value) || 1))
-                            }
+                            onChange={(e) => setAnalysisYears(Math.max(1, parseInt(e.target.value) || 1))}
                             className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                             min="1"
                             max="10"
@@ -488,28 +486,22 @@ const CarCostCalculator = () => {
                         <div className="mt-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Fuel Price (₪ / litre)
-                                    <Tooltip
-                                        id="costPerLitre-global"
-                                        text={tooltips.costPerLitre}
-                                    />
+                                    מחיר דלק (₪ / ליטר)
+                                    <Tooltip id="costPerLitre-global" text={tooltips.costPerLitre} />
                                 </label>
                                 <input
                                     type="number"
                                     step="0.01"
                                     value={globalCosts.costPerLitre}
                                     onChange={(e) =>
-                                        setGlobalCosts((g: any) => ({
-                                            ...g,
-                                            costPerLitre: parseFloat(e.target.value) || 0,
-                                        }))
+                                        setGlobalCosts((g: any) => ({ ...g, costPerLitre: parseFloat(e.target.value) || 0 }))
                                     }
                                     className="w-40 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Electricity Price (₪ / kWh)
+                                    מחיר חשמל (₪ / קוט"ש)
                                     <Tooltip id="costPerKWh-global" text={tooltips.costPerKWh} />
                                 </label>
                                 <input
@@ -517,10 +509,7 @@ const CarCostCalculator = () => {
                                     step="0.01"
                                     value={globalCosts.costPerKWh}
                                     onChange={(e) =>
-                                        setGlobalCosts((g: any) => ({
-                                            ...g,
-                                            costPerKWh: parseFloat(e.target.value) || 0,
-                                        }))
+                                        setGlobalCosts((g: any) => ({ ...g, costPerKWh: parseFloat(e.target.value) || 0 }))
                                     }
                                     className="w-40 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 />
@@ -528,7 +517,7 @@ const CarCostCalculator = () => {
                         </div>
                         <div className="mt-4 w-56">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                KM per Year (global)
+                                ק"מ לשנה (גלובלי)
                                 <Tooltip id="globalKmPerYear" text={tooltips.kmPerYear} />
                             </label>
                             <input
@@ -545,14 +534,14 @@ const CarCostCalculator = () => {
 
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        Cost Comparison Summary
+                        סיכום השוואת עלויות
                     </h2>
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b-2 border-gray-300">
                                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                                        Metric
+                                        מדד
                                     </th>
                                     {cars.map((car: any) => (
                                         <th
@@ -566,7 +555,7 @@ const CarCostCalculator = () => {
                             </thead>
                             <tbody>
                                 <tr className="border-b border-gray-200">
-                                    <td className="py-3 px-4 font-medium text-gray-700">Type</td>
+                                    <td className="py-3 px-4 font-medium text-gray-700">סוג</td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="text-right py-3 px-4">
                                             <span
@@ -577,14 +566,18 @@ const CarCostCalculator = () => {
                                                             : "bg-purple-100 text-purple-800"
                                                     }`}
                                             >
-                                                {car.type.toUpperCase()}
+                                                {car.type === "new"
+                                                    ? "חדש"
+                                                    : car.type === "used"
+                                                        ? "יד שניה"
+                                                        : "ליסינג"}
                                             </span>
                                         </td>
                                     ))}
                                 </tr>
                                 <tr className="border-b border-gray-200 bg-yellow-50">
                                     <td className="py-3 px-4 font-bold text-gray-800">
-                                        Net Cost (TRUE Cost)
+                                        עלות נטו (העלות האמיתית)
                                         <Tooltip id="netCost" text={tooltips.netCost} />
                                     </td>
                                     {cars.map((car: any) => {
@@ -604,7 +597,7 @@ const CarCostCalculator = () => {
                                 </tr>
                                 <tr className="border-b border-gray-200">
                                     <td className="py-3 px-4 text-gray-700">
-                                        Cost per Year
+                                        עלות לשנה
                                         <Tooltip id="costPerYear" text={tooltips.costPerYear} />
                                     </td>
                                     {cars.map((car: any) => {
@@ -624,7 +617,7 @@ const CarCostCalculator = () => {
                                 </tr>
                                 <tr className="border-b border-gray-200">
                                     <td className="py-3 px-4 text-gray-700">
-                                        Cost per KM
+                                        עלות ל-ק"מ
                                         <Tooltip id="costPerKm-summary" text={tooltips.costPerKm} />
                                     </td>
                                     {cars.map((car: any) => {
@@ -648,7 +641,7 @@ const CarCostCalculator = () => {
                                 </tr>
                                 <tr className="border-b border-gray-200">
                                     <td className="py-3 px-4 text-gray-700">
-                                        Residual Value
+                                        עלות שיורית
                                         <Tooltip
                                             id="residualValue-summary"
                                             text={tooltips.residualValue}
@@ -707,16 +700,16 @@ const CarCostCalculator = () => {
                                         }
                                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                     >
-                                        <option value="new">New</option>
-                                        <option value="used">Used</option>
-                                        <option value="lease">Lease</option>
+                                        <option value="new">חדש</option>
+                                        <option value="used">יד שניה</option>
+                                        <option value="lease">ליסינג</option>
                                     </select>
                                     {cars.length > 1 && (
                                         <button
                                             onClick={() => removeCar(car.id)}
                                             className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                                         >
-                                            Remove
+                                            הסר
                                         </button>
                                     )}
                                 </div>
@@ -725,14 +718,14 @@ const CarCostCalculator = () => {
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                                        Input Parameters
+                                        פרמטרים להזנה
                                     </h3>
                                     <div className="space-y-3">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                                 {car.type === "lease"
-                                                    ? "Initial Payment (₪)"
-                                                    : "Purchase Price (₪)"}
+                                                    ? "תשלום התחלתי (₪)"
+                                                    : "מחיר רכישה (₪)"}
                                                 <Tooltip
                                                     id={`purchasePrice-${car.id}`}
                                                     text={tooltips.purchasePrice}
@@ -752,7 +745,7 @@ const CarCostCalculator = () => {
                                             <>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        Monthly Lease Payment (₪)
+                                                        תשלומי ליסינג חודשיים (₪)
                                                         <Tooltip
                                                             id={`leaseMonthly-${car.id}`}
                                                             text={tooltips.leaseMonthly}
@@ -769,7 +762,7 @@ const CarCostCalculator = () => {
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        KM Limit per Year
+                                                        מגבלת ק"מ לשנה
                                                         <Tooltip
                                                             id={`kmLimit-${car.id}`}
                                                             text={tooltips.kmLimit}
@@ -786,7 +779,7 @@ const CarCostCalculator = () => {
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        Excess KM Cost (₪/km)
+                                                        עלות ק"מ עודף (₪/ק"מ)
                                                         <Tooltip
                                                             id={`excessKmCost-${car.id}`}
                                                             text={tooltips.excessKmCost}
@@ -808,7 +801,7 @@ const CarCostCalculator = () => {
                                         {car.type !== "lease" && (
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Depreciation Rate (% per year)
+                                                    שיעור פחת (% לשנה)
                                                     <Tooltip
                                                         id={`depreciationRate-${car.id}`}
                                                         text={tooltips.depreciationRate}
@@ -832,7 +825,7 @@ const CarCostCalculator = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Insurance Year 1 (₪)
+                                                ביטוח שנה 1 (₪)
                                                 <Tooltip
                                                     id={`insuranceYear1-${car.id}`}
                                                     text={tooltips.insuranceYear1}
@@ -849,7 +842,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Insurance Decrease (% per year)
+                                                ירידת ביטוח (% לשנה)
                                                 <Tooltip
                                                     id={`insuranceDecrease-${car.id}`}
                                                     text={tooltips.insuranceDecrease}
@@ -867,7 +860,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Annual Tax (₪)
+                                                מס שנתי (₪)
                                                 <Tooltip
                                                     id={`taxYear-${car.id}`}
                                                     text={tooltips.taxYear}
@@ -884,7 +877,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Maintenance per Year (₪)
+                                                אחזקה לשנה (₪)
                                                 <Tooltip
                                                     id={`maintenancePerYear-${car.id}`}
                                                     text={tooltips.maintenancePerYear}
@@ -905,7 +898,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                KM per Year (using global)
+                                                ק"מ לשנה (גלובלי)
                                                 <Tooltip
                                                     id={`kmPerYear-${car.id}`}
                                                     text={tooltips.kmPerYear}
@@ -917,7 +910,7 @@ const CarCostCalculator = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Energy Cost per KM (₪)
+                                                עלות אנרגיה ל-ק"מ (₪)
                                                 <Tooltip
                                                     id={`costPerKm-${car.id}`}
                                                     text={tooltips.energyCostPerKm}
@@ -943,7 +936,7 @@ const CarCostCalculator = () => {
                                                         className="mr-2"
                                                     />
                                                     <span>
-                                                        Auto-compute from drivetrain & global prices
+                                                        חישוב אוטומטי לפי סוג הנעה ומחירים גלובליים
                                                     </span>
                                                 </label>
                                             </div>
@@ -968,7 +961,7 @@ const CarCostCalculator = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Drivetrain
+                                                סוג הנעה
                                             </label>
                                             <select
                                                 value={car.drivetrain}
@@ -983,9 +976,9 @@ const CarCostCalculator = () => {
                                                 }
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                             >
-                                                <option value="electric">Electric</option>
-                                                <option value="phev">PHEV</option>
-                                                <option value="gasoline">Gasoline</option>
+                                                <option value="electric">חשמלי</option>
+                                                <option value="phev">היברידי נטען</option>
+                                                <option value="gasoline">בנזין</option>
                                             </select>
                                         </div>
 
@@ -994,7 +987,7 @@ const CarCostCalculator = () => {
                                                 <>
                                                     <div>
                                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                            KM per Charge
+                                                            ק"מ להטענה
                                                         </label>
                                                         <input
                                                             type="number"
@@ -1007,7 +1000,7 @@ const CarCostCalculator = () => {
                                                     </div>
                                                     <div>
                                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                            kWh per Charge
+                                                            kWh להטענה
                                                         </label>
                                                         <input
                                                             type="number"
@@ -1026,7 +1019,7 @@ const CarCostCalculator = () => {
                                             car.drivetrain === "phev") && (
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        KM per Litre
+                                                        ק"מ לליטר
                                                     </label>
                                                     <input
                                                         type="number"
@@ -1044,14 +1037,14 @@ const CarCostCalculator = () => {
 
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                                        Cost Breakdown ({analysisYears} years)
+                                        פירוט עלויות ({analysisYears} שנים)
                                     </h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                            <span className="text-gray-700">
+                                                <span className="text-gray-700">
                                                 {car.type === "lease"
-                                                    ? "Initial Payment:"
-                                                    : "Purchase Price:"}
+                                                    ? "תשלום התחלתי:"
+                                                    : "מחיר רכישה:"}
                                             </span>
                                             <span className="font-semibold">
                                                 ₪
@@ -1061,8 +1054,8 @@ const CarCostCalculator = () => {
                                             </span>
                                         </div>
                                         {car.type === "lease" && (
-                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                                <span className="text-gray-700">Lease Payments:</span>
+                                                <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                                <span className="text-gray-700">תשלומי ליסינג:</span>
                                                 <span className="font-semibold">
                                                     ₪
                                                     {costs.breakdown.lease
@@ -1071,8 +1064,8 @@ const CarCostCalculator = () => {
                                                 </span>
                                             </div>
                                         )}
-                                        <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                            <span className="text-gray-700">Insurance:</span>
+                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                            <span className="text-gray-700">ביטוח:</span>
                                             <span className="font-semibold">
                                                 ₪
                                                 {costs.breakdown.insurance
@@ -1080,8 +1073,8 @@ const CarCostCalculator = () => {
                                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                            <span className="text-gray-700">Tax:</span>
+                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                            <span className="text-gray-700">מס:</span>
                                             <span className="font-semibold">
                                                 ₪
                                                 {costs.breakdown.tax
@@ -1089,8 +1082,8 @@ const CarCostCalculator = () => {
                                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                            <span className="text-gray-700">Maintenance:</span>
+                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                            <span className="text-gray-700">אחזקה:</span>
                                             <span className="font-semibold">
                                                 ₪
                                                 {costs.breakdown.maintenance
@@ -1098,8 +1091,8 @@ const CarCostCalculator = () => {
                                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                            <span className="text-gray-700">Energy/Fuel:</span>
+                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                            <span className="text-gray-700">אנרגיה/דלק:</span>
                                             <span className="font-semibold">
                                                 ₪
                                                 {costs.breakdown.fuel
@@ -1108,8 +1101,8 @@ const CarCostCalculator = () => {
                                             </span>
                                         </div>
                                         {car.type !== "lease" && (
-                                            <div className="flex justify-between p-2 bg-gray-50 rounded">
-                                                <span className="text-gray-700">Depreciation:</span>
+                                                <div className="flex justify-between p-2 bg-gray-50 rounded">
+                                                <span className="text-gray-700">פחת:</span>
                                                 <span className="font-semibold">
                                                     ₪
                                                     {costs.breakdown.depreciation
@@ -1121,7 +1114,7 @@ const CarCostCalculator = () => {
                                         <div className="border-t-2 border-gray-300 mt-3 pt-3">
                                             <div className="flex justify-between p-2 bg-blue-50 rounded">
                                                 <span className="font-bold text-gray-800">
-                                                    Total Cost:
+                                                    עלות כוללת:
                                                     <Tooltip
                                                         id={`totalCost-${car.id}`}
                                                         text={tooltips.totalCost}
@@ -1137,7 +1130,7 @@ const CarCostCalculator = () => {
                                             {car.type !== "lease" && (
                                                 <div className="flex justify-between p-2 bg-green-50 rounded mt-2">
                                                     <span className="font-bold text-gray-800">
-                                                        Residual Value:
+                                                        ערך שארית:
                                                         <Tooltip
                                                             id={`residualValue-${car.id}`}
                                                             text={tooltips.residualValue}
@@ -1153,7 +1146,7 @@ const CarCostCalculator = () => {
                                             )}
                                             <div className="flex justify-between p-2 bg-yellow-50 rounded mt-2">
                                                 <span className="font-bold text-gray-800">
-                                                    Net Cost:
+                                                    עלות נטו:
                                                     <Tooltip
                                                         id={`netCost-${car.id}`}
                                                         text={tooltips.netCost}
@@ -1167,8 +1160,8 @@ const CarCostCalculator = () => {
                                                 </span>
                                             </div>
                                             <div className="flex justify-between p-2 bg-purple-50 rounded mt-2">
-                                                <span className="font-semibold text-gray-800">
-                                                    Cost per Year:
+                                                    <span className="font-semibold text-gray-800">
+                                                    עלות לשנה:
                                                 </span>
                                                 <span className="font-semibold text-purple-700">
                                                     ₪
@@ -1178,8 +1171,8 @@ const CarCostCalculator = () => {
                                                 </span>
                                             </div>
                                             <div className="flex justify-between p-2 bg-indigo-50 rounded mt-2">
-                                                <span className="font-semibold text-gray-800">
-                                                    Cost per KM:
+                                                    <span className="font-semibold text-gray-800">
+                                                    עלות ל-ק"מ:
                                                 </span>
                                                 <span className="font-semibold text-indigo-700">
                                                     ₪
@@ -1205,49 +1198,45 @@ const CarCostCalculator = () => {
                         onClick={addCar}
                         className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
                     >
-                        + Add Another Car
+                        + הוסף רכב נוסף
                     </button>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        💡 Tips for Israeli Car Buyers
+                        💡 טיפים לקוני רכב בישראל
                     </h2>
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="p-4 bg-blue-50 rounded-lg">
                             <h3 className="font-semibold text-gray-800 mb-2">
-                                ⚡ Electric Vehicles
+                                ⚡ רכבים חשמליים
                             </h3>
                             <p className="text-sm text-gray-700">
-                                EVs like Ioniq 5 and Tesla have lower running costs
-                                (₪0.10-0.15/km) and benefit from tax exemptions in Israel.
-                                Charging at home is much cheaper than public stations.
+                                רכבים חשמליים כמו Ioniq 5 וטסלה נהנים מעלויות תפעול נמוכות
+                                (₪0.10-0.15/ק"מ) ומטבות מס בישראל. טעינה ביתית בדרך כלל זולה יותר מתחנות ציבוריות.
                             </p>
                         </div>
                         <div className="p-4 bg-green-50 rounded-lg">
-                            <h3 className="font-semibold text-gray-800 mb-2">🚗 Used Cars</h3>
+                            <h3 className="font-semibold text-gray-800 mb-2">🚗 רכבים יד שניה</h3>
                             <p className="text-sm text-gray-700">
-                                Lower initial cost but higher maintenance. Depreciation is
-                                slower but you start with lower value. Check service history
-                                carefully and consider warranty options.
+                                עלות התחלתית נמוכה יותר אך אחזקה גבוהה יותר. פחת איטי יותר
+                                אך מתחילים בערך נמוך יותר. בדקו היסטוריית טיפולים ושקלו אופציות אחריות.
                             </p>
                         </div>
                         <div className="p-4 bg-purple-50 rounded-lg">
-                            <h3 className="font-semibold text-gray-800 mb-2">📋 Leasing</h3>
+                            <h3 className="font-semibold text-gray-800 mb-2">📋 ליסינג</h3>
                             <p className="text-sm text-gray-700">
-                                Good for business use (tax deductible). No residual value means
-                                you never own the car. Watch KM limits - excess charges
-                                (₪0.40-0.80/km) add up quickly!
+                                מתאים לשימוש עסקי (מוכר למס). אין ערך שארית — אתם לא תהיו בעלי הרכב.
+                                שימו לב למגבלות ק"מ; תשלומי עודף (₪0.40-0.80/ק"מ) מצטברים מהר.
                             </p>
                         </div>
                         <div className="p-4 bg-orange-50 rounded-lg">
                             <h3 className="font-semibold text-gray-800 mb-2">
-                                📊 Key Insights
+                                📊 תובנות מרכזיות
                             </h3>
                             <p className="text-sm text-gray-700">
-                                Depreciation is often your biggest cost! Insurance decreases
-                                3-7% yearly. The longer you keep a car, the better ownership
-                                becomes vs leasing.
+                                פחת הוא לעתים קרובות העלות הגדולה ביותר! הביטוח יורד 3-7% בשנה.
+                                ככל שתשמרו רכב לאורך זמן, הבעלות משתלמת יותר ביחס לליסינג.
                             </p>
                         </div>
                     </div>
@@ -1255,64 +1244,60 @@ const CarCostCalculator = () => {
 
                 <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        📖 Understanding Your Results
+                        📖 הבנת התוצאות שלך
                     </h2>
                     <div className="space-y-4 text-gray-700">
                         <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
                             <h4 className="font-bold text-gray-800 mb-2">
-                                🎯 Net Cost - The Most Important Number!
+                                🎯 עלות נטו - המספר הכי חשוב!
                             </h4>
                             <p className="text-sm">
-                                This is your TRUE out-of-pocket cost. For owned cars, it's Total
-                                Cost minus what you can sell the car for (Residual Value). For
-                                leases, it's just the total since you don't own anything at the
-                                end. This is the number you should compare!
+                                זו העלות הנטו שלכם בפועל. עבור רכבים בבעלות — זו עלות כוללת
+                                פחות מה שתוכלו לקבל ממכירת הרכב (ערך שארית). עבור ליסינג — זו
+                                העלות הכוללת מכיוון שאינכם הבעלים בסוף התקופה. זה המספר להשוואה.
                             </p>
                         </div>
 
                         <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                             <h4 className="font-bold text-gray-800 mb-2">
-                                💸 Why Depreciation Matters
+                                💸 למה פחת חשוב
                             </h4>
                             <p className="text-sm">
-                                A new car loses 15-20% of its value in the first year, then
-                                8-12% yearly. Over 5 years, a ₪220,000 car might be worth only
-                                ₪100,000. That's ₪120,000 in depreciation - often your biggest
-                                cost! Used cars depreciate slower.
+                                רכב חדש מאבד 15-20% מערכו בשנה הראשונה, ואז 8-12% בשנה.
+                                בטווח של 5 שנים, רכב בשווי ₪220,000 עלול להיות שווה ₪100,000 —
+                                זה ₪120,000 בפחת, שלעתים קרובות הוא העלות הגדולה ביותר.
                             </p>
                         </div>
 
                         <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                             <h4 className="font-bold text-gray-800 mb-2">
-                                ⚡ Electric vs Hybrid vs Gasoline
+                                ⚡ חשמלי מול היברידי מול בנזין
                             </h4>
                             <p className="text-sm">
-                                Running costs: Electric ₪0.10-0.15/km, Hybrid ₪0.20-0.30/km,
-                                Gasoline ₪0.40-0.60/km. Over 15,000 km/year for 5 years (75,000
-                                km), an EV saves ₪18,750-37,500 vs gasoline!
+                                עלויות ריצה: חשמל ₪0.10-0.15/ק"מ, היברידי ₪0.20-0.30/ק"מ,
+                                בנזין ₪0.40-0.60/ק"מ. ב-15,000 ק"מ/שנה במשך 5 שנים (75,000 ק"מ),
+                                רכב חשמלי חוסך מאות עד עשרות אלפי שקלים לעומת בנזין.
                             </p>
                         </div>
 
                         <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
                             <h4 className="font-bold text-gray-800 mb-2">
-                                📅 When Leasing Makes Sense
+                                📅 מתי ליסינג משתלם
                             </h4>
                             <p className="text-sm">
-                                Leasing is good for: 1) Business use (tax deductible), 2)
-                                Short-term needs (2-3 years), 3) Always wanting a new car. It's
-                                expensive long-term because you never build equity - you're
-                                essentially renting.
+                                ליסינג מתאים ל: שימוש עסקי (מוכר למס), צרכים לטווח קצר (2-3 שנים),
+                                או למי שרוצה תמיד רכב חדש. לטווח הארוך זה יקר יותר מאשר בעלות.
                             </p>
                         </div>
 
                         <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
                             <h4 className="font-bold text-gray-800 mb-2">
-                                🔧 Maintenance Reality
+                                🔧 מציאות האחזקה
                             </h4>
                             <p className="text-sm">
-                                EVs need minimal maintenance (no oil changes, fewer brake
-                                replacements). Hybrids need regular service. Used cars need more
-                                maintenance. Budget 15-20% more for used cars vs new.
+                                רכב חשמלי דורש אחזקה מינימלית (ללא החלפת שמן, פחות בלמים).
+                                היברידים דורשים טיפולים שוטפים. רכבים יד שניה דורשים יותר תחזוקה.
+                                תקצבו כ-15-20% יותר לאחזקה ברכבים יד שניה לעומת חדשים.
                             </p>
                         </div>
                     </div>
