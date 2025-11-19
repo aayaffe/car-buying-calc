@@ -739,7 +739,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">מחיר רכישה (₪)</td>
+                                    <td className="py-2 px-3">
+                                        מחיר רכישה (₪)
+                                        <Tooltip id="purchasePrice-wide" text={tooltips.purchasePrice} />
+                                    </td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="py-2 px-3 text-right">
                                             <input
@@ -753,7 +756,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">תשלום ליסינג חודשי (₪)</td>
+                                    <td className="py-2 px-3">
+                                        תשלום ליסינג חודשי (₪)
+                                        <Tooltip id="leaseMonthly-wide" text={tooltips.leaseMonthly} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const disabled = car.type !== "lease";
                                         return (
@@ -771,7 +777,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">שיעור פחת (% לשנה)</td>
+                                    <td className="py-2 px-3">
+                                        שיעור פחת (% לשנה)
+                                        <Tooltip id="depreciationRate-wide" text={tooltips.depreciationRate} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const disabled = car.type === "lease";
                                         return (
@@ -790,7 +799,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">ביטוח שנה 1 (₪)</td>
+                                    <td className="py-2 px-3">
+                                        ביטוח שנה 1 (₪)
+                                        <Tooltip id="insuranceYear1-wide" text={tooltips.insuranceYear1} />
+                                    </td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="py-2 px-3 text-right">
                                             <input
@@ -804,7 +816,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">ירידת ביטוח (% לשנה)</td>
+                                    <td className="py-2 px-3">
+                                        ירידת ביטוח (% לשנה)
+                                        <Tooltip id="insuranceDecrease-wide" text={tooltips.insuranceDecrease} />
+                                    </td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="py-2 px-3 text-right">
                                             <input
@@ -819,7 +834,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">רישוי/מס שנתי (₪)</td>
+                                    <td className="py-2 px-3">
+                                        רישוי/מס שנתי (₪)
+                                        <Tooltip id="taxYear-wide" text={tooltips.taxYear} />
+                                    </td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="py-2 px-3 text-right">
                                             <input
@@ -833,7 +851,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">אחזקה לשנה (₪)</td>
+                                    <td className="py-2 px-3">
+                                        אחזקה לשנה (₪)
+                                        <Tooltip id="maintenancePerYear-wide" text={tooltips.maintenancePerYear} />
+                                    </td>
                                     {cars.map((car: any) => (
                                         <td key={car.id} className="py-2 px-3 text-right">
                                             <input
@@ -870,7 +891,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">ק"מ להטענה</td>
+                                    <td className="py-2 px-3">
+                                        ק"מ להטענה
+                                        <Tooltip id="kmPerCharge-wide" text={tooltips.energyCostPerKm} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const enabled = car.drivetrain === "electric" || car.drivetrain === "phev";
                                         return (
@@ -888,7 +912,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">kWh להטענה</td>
+                                    <td className="py-2 px-3">
+                                        kWh להטענה
+                                        <Tooltip id="kWhPerCharge-wide" text={tooltips.costPerKWh} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const enabled = car.drivetrain === "electric" || car.drivetrain === "phev";
                                         return (
@@ -907,7 +934,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">ק"מ לליטר</td>
+                                    <td className="py-2 px-3">
+                                        ק"מ לליטר
+                                        <Tooltip id="kmPerLitre-wide" text={tooltips.costPerLitre} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const enabled = car.drivetrain === "gasoline" || car.drivetrain === "phev";
                                         return (
@@ -965,7 +995,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">מגבלת ק"מ לשנה</td>
+                                    <td className="py-2 px-3">
+                                        מגבלת ק"מ לשנה
+                                        <Tooltip id="kmLimit-wide" text={tooltips.kmLimit} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const disabled = car.type !== "lease";
                                         return (
@@ -983,7 +1016,10 @@ const CarCostCalculator = () => {
                                 </tr>
 
                                 <tr>
-                                    <td className="py-2 px-3">עלות ק"מ עודף (₪/ק"מ)</td>
+                                    <td className="py-2 px-3">
+                                        עלות ק"מ עודף (₪/ק"מ)
+                                        <Tooltip id="excessKmCost-wide" text={tooltips.excessKmCost} />
+                                    </td>
                                     {cars.map((car: any) => {
                                         const disabled = car.type !== "lease";
                                         return (

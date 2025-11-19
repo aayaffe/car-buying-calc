@@ -152,6 +152,18 @@ input[disabled]:focus, select[disabled]:focus, textarea[disabled]:focus {
   outline: none;
 }
 
+/* Ensure table text is right-justified for RTL layout (Hebrew) */
+div[dir="rtl"] table th,
+div[dir="rtl"] table td {
+  text-align: right !important;
+  direction: rtl;
+}
+
+/* Keep header labels slightly bolder for readability */
+div[dir="rtl"] table thead th {
+  font-weight: 600;
+}
+
 /* Misc */
 .border-t-2{border-top-width:2px;border-top-color:#e6edf2}
 .rounded-lg{border-radius:8px}
